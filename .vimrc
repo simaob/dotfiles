@@ -33,10 +33,12 @@ Plugin 'grep.vim'
 Plugin 'slim-template/vim-slim'
 Plugin 'tpope/vim-endwise'
 Plugin 'elzr/vim-json'
-Plugin 'altercation/vim-colors-solarized'
+"Plugin 'altercation/vim-colors-solarized'
+Plugin 'sjl/badwolf'
 Plugin 'wting/rust.vim'
 Plugin 'eagletmt/neco-ghc'
 Plugin 'sjl/gundo.vim'
+Plugin 'mustache/vim-mustache-handlebars'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -56,6 +58,10 @@ filetype plugin indent on    " required
 
 syntax on
 
+
+" remap leader to comma
+let mapleader=","
+
 " tabs
 set softtabstop=2
 set tabstop=2
@@ -66,6 +72,7 @@ set number
 set numberwidth=3
 set showbreak=>\
 set hlsearch
+set incsearch "search as characters are entered
 set nocompatible
 filetype on
 set ttyfast
@@ -75,8 +82,13 @@ set history=100
 set viminfo+=:100
 set viminfo+=/100
 set switchbuf=useopen
-set nobackup
-set noswapfile
+" moves backup to tmp folder
+set backup
+set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set backupskip=/tmp/*,/private/tmp/*
+set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set writebackup
+" set noswapfile
 
 "Airline plugin configs
 set laststatus=2
@@ -86,7 +98,15 @@ set statusline=%{fugitive#statusline()}
 
 let g:solarized_termcolors=256
 set background=dark
-colorscheme solarized
+colorscheme badwolf
+" Make the gutters darker than the background.
+let g:badwolf_darkgutter = 1
+" Make the tab line lighter than the background.
+let g:badwolf_tabline = 2
+" Turn on CSS properties highlighting
+let g:badwolf_css_props_highlight = 1
+
+"colorscheme solarized
 "colorscheme desert
 
 set colorcolumn=80
@@ -98,4 +118,28 @@ set synmaxcol=250
 
 set backspace=indent,eol,start
 
-nnoremap <leader>G :GundoToggle<CR> 
+nnoremap <leader>G :GundoToggle<CR>
+
+set cursorline " highlight current line
+set wildmenu " visual autocomplete for command menu
+
+" move vertically by visual line
+nnoremap j gj
+nnoremap k gk
+
+" highlight last inserted text
+nnoremap gV `[v`]
+
+" strips trailing whitespace at the end of files. this
+" is called on buffer write in the autogroup above.
+function! StripTrailingWhitespaces()
+  " save last search & cursor position
+  let _s=@/
+  let l = line(".")
+  let c = col(".")
+  %s/\s\+$//e
+  let @/=_s
+  call cursor(l, c)
+endfunction
+
+" Source of many of this http://dougblack.io/words/a-good-vimrc.html
