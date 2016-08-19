@@ -39,6 +39,7 @@ Plugin 'wting/rust.vim'
 Plugin 'eagletmt/neco-ghc'
 Plugin 'sjl/gundo.vim'
 Plugin 'mustache/vim-mustache-handlebars'
+Plugin 'klen/python-mode'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
